@@ -3,6 +3,7 @@ const container_principal = document.getElementById('main_container');
 const ponto1 = document.getElementById('ponto1');
 const ponto2 = document.getElementById('ponto2');
 const resultado = document.getElementById('resultado');
+const custo = document.getElementById('custo');
 
 let result = 0;
 
@@ -10,21 +11,8 @@ function desenhaVertice(vertice, vizinhos){
     const id = vertice.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
     if(!document.getElementById(id)){
-        const lista_adjacencia = document.getElementById('lista_adjacencia');
-
-        const linha = document.createElement('tr');
-        linha.setAttribute('id', vertice.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase());
-        const tdVertice = document.createElement('td');
-        tdVertice.innerText = vertice;
-        const tdVizinhos = document.createElement('td');
-        tdVizinhos.innerText = vizinhos.join(', ');
-
-        linha.appendChild(tdVertice);
-        linha.appendChild(tdVizinhos);
-
-        lista_adjacencia.appendChild(linha);
-
         const opPonto1 = document.createElement('option');
+        
         opPonto1.setAttribute('value', vertice);
         opPonto1.innerText = vertice;
 
@@ -108,7 +96,7 @@ class Grafo {
 
     adicionarAresta(v1, v2, tipo, estado, distancia) {
         this.listaAdjacencia[v1].push({ node: v2, tipo, estado, distancia });
-        this.listaAdjacencia[v2].push({ node: v1, tipo, estado, distancia }); // não direcionado
+        this.listaAdjacencia[v2].push({ node: v1, tipo, estado, distancia });
         desenhaAresta(v1, v2, tipo, estado, distancia);
     }
 
@@ -117,7 +105,6 @@ class Grafo {
         const anterior = {};
         const visitado = {};
 
-        // Inicializa distâncias e marca todos como não visitados
         for (let vertice in this.listaAdjacencia) {
             distancias[vertice] = Infinity;
             anterior[vertice] = null;
@@ -248,7 +235,8 @@ function criaGrafoAltoVale(grafo) {
 
 function calcular(){
     result = g.menorCaminho(ponto1.value, ponto2.value)
-    resultado.innerHTML = result.caminho.join(' -> ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    resultado.innerText = result.caminho.join(' -> ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    custo.innerText = result.distancia;
     console.log(result);
     
 };
