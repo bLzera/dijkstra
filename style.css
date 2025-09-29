@@ -1,17 +1,17 @@
-body {
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+td {
+    text-align: center;
 }
 
 .main_container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 500px;
-    width: 500px;
     border: 2px white solid;
     background-color: gray;
+}
+
+.data_container {
+    display: flex;
+    flex-direction: column;
 }

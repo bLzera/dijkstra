@@ -1,5 +1,76 @@
 const container_principal = document.getElementById('main_container');
 
+const ponto1 = document.getElementById('ponto1');
+const ponto2 = document.getElementById('ponto2');
+const resultado = document.getElementById('resultado');
+
+let result = 0;
+
+function desenhaVertice(vertice, vizinhos){
+    const id = vertice.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    if(!document.getElementById(id)){
+        const lista_adjacencia = document.getElementById('lista_adjacencia');
+
+        const linha = document.createElement('tr');
+        linha.setAttribute('id', vertice.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase());
+        const tdVertice = document.createElement('td');
+        tdVertice.innerText = vertice;
+        const tdVizinhos = document.createElement('td');
+        tdVizinhos.innerText = vizinhos.join(', ');
+
+        linha.appendChild(tdVertice);
+        linha.appendChild(tdVizinhos);
+
+        lista_adjacencia.appendChild(linha);
+
+        const opPonto1 = document.createElement('option');
+        opPonto1.setAttribute('value', vertice);
+        opPonto1.innerText = vertice;
+
+        const opPonto2 = opPonto1.cloneNode(true);
+
+        ponto1.appendChild(opPonto1);
+        ponto2.appendChild(opPonto2);
+    } else {
+        alert(`vértice ${vertice} já existe`);
+    }
+};
+
+function desenhaAresta(start, end, tipo, estado, distancia){
+    const startFormatted = start.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const endFormatted = end.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const pontos = [startFormatted, endFormatted];
+    const id = pontos.join('_');
+
+    if(!document.getElementById(pontos.join('_')) && !document.getElementById(pontos.reverse().join('_'))){
+        const lista_aresta = document.getElementById('lista_aresta');
+
+        const linha = document.createElement('tr');
+        linha.setAttribute('id', id);
+
+        const tdId = document.createElement('td');
+        tdId.innerText = id;
+        const tdNome = document.createElement('td');
+        tdNome.innerText = start + ' - ' + end;
+        const tdTipo = document.createElement('td');
+        tdTipo.innerText = tipo;
+        const tdEstado = document.createElement('td');
+        tdEstado.innerText = estado;
+        const tdDistancia = document.createElement('td');
+        tdDistancia.innerText = distancia;
+
+        linha.appendChild(tdId);
+        linha.appendChild(tdNome);
+        linha.appendChild(tdTipo);
+        linha.appendChild(tdEstado);
+        linha.appendChild(tdDistancia);
+
+        lista_aresta.appendChild(linha);
+    }
+}
+
 class Grafo {
     constructor() {
         this.listaAdjacencia = {};
@@ -15,10 +86,20 @@ class Grafo {
         };
     }
 
+    atualizaTela(){
+        for(vertice in this.listaAdjacencia){
+            desenhaVertice(vertice, this.listaAdjacencia[vertice]);
+            for(vizinho in this.listaAdjacencia[vertice]){
+                desenhaAresta(vertice, vizinho.node, this.listaAdjacencia[vertice].tipo, this.listaAdjacencia[vertice].estado);
+            }
+        }
+    }
+
     adicionarVertice(vertice) {
         if (!this.listaAdjacencia[vertice]) {
             this.listaAdjacencia[vertice] = [];
         }
+        desenhaVertice(vertice, this.listaAdjacencia[vertice]);
     }
 
     calcularDistancia(edge) {
@@ -28,6 +109,7 @@ class Grafo {
     adicionarAresta(v1, v2, tipo, estado, distancia) {
         this.listaAdjacencia[v1].push({ node: v2, tipo, estado, distancia });
         this.listaAdjacencia[v2].push({ node: v1, tipo, estado, distancia }); // não direcionado
+        desenhaAresta(v1, v2, tipo, estado, distancia);
     }
 
     dijkstra(inicio) {
@@ -41,6 +123,7 @@ class Grafo {
             anterior[vertice] = null;
             visitado[vertice] = false;
         }
+
         distancias[inicio] = 0;
 
         while (true) {
@@ -85,7 +168,7 @@ class Grafo {
         }
 
         return {
-            distance: distancias[final],
+            distancia: distancias[final],
             caminho: caminho.reverse()
         };
     }
@@ -159,7 +242,15 @@ function criaGrafoAltoVale(grafo) {
     grafo.adicionarAresta('Pouso Redondo', 'Presidente Nereu', 'asfalto', 'boa', 9);
     grafo.adicionarAresta('Presidente Nereu', 'Rio do Campo', 'calcamento', 'boa', 6);
     grafo.adicionarAresta('Vitor Meireles', 'Witmarsum', 'calcamento', 'otima', 5);
+
+    console.log(g.listaAdjacencia)
 }
 
+function calcular(){
+    result = g.menorCaminho(ponto1.value, ponto2.value)
+    resultado.innerHTML = result.caminho.join(' -> ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    console.log(result);
+    
+};
+
 criaGrafoAltoVale(g);
-console.log(g.menorCaminho('Agronômica', 'Agrolândia'));

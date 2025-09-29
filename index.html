@@ -8,8 +8,34 @@
 </head>
 <body>
     <div class="main_container">
+        <div class="data_container">
+            <h2>Lista de Adjacência</h2>
+            <table id="lista_adjacencia">
+                <tr>
+                    <th>Vértice</th>
+                    <th>Adjacentes</th>
+                </tr>
+            </table>
+            <h2>Lista de Arestas</h2>
+            <table id="lista_aresta">
+                <tr>
+                    <th>ID</th>
+                    <th>Aresta</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Distância</th>
+                </tr>
+            </table>
+        </div>        
         <label for="ponto1">Primeiro ponto:</label>
-        <input type="number" id="ponto1" name="ponto1" placeholder="primeiro ponto">
+        <select name="ponto1" id="ponto1">
+        </select>
+        <label for="ponto2">Segundo Ponto:</label>
+        <select name="ponto2" id="ponto2">
+        </select>
+        Resultado:
+        <div id="resultado"></div>
+        <button type="button" onclick="calcular()">Calcular</button>
     </div>
 </body>
 <script src="script.js"></script>
